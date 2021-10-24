@@ -1,0 +1,59 @@
+
+ How to create django project and set for production stage then deploy to heroku
+
+
+ Steps:
+
+ 1.) Create a local folder for your project.
+
+ 2.) Create Virtual Environment
+             -> python -m venv virtual_name
+
+ 3.) Copy requirements.txt
+	
+	     -> pip install -r requirements.txt
+
+ 4.) Create django project
+
+	     -> django-admin startproject projname
+
+ 5.) Configure projname settings.py
+	      
+              -> debug = false
+              -> allow_host = ['heroku_host','localhost']
+              -> static files				
+			-> STATIC_URL = '/static/'
+			-> STATIC_ROOT = os.path.join(BASE_DIR, 'static/')	
+              -> media files
+			-> MEDIA_URL = '/media/'
+			-> MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media')
+
+	      -> white_noise
+			-> Middleware  ( Insert after 1st row )
+				-> 'whitenoise.middleware.WhiteNoiseMiddleware',
+
+			-> STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+			-> WHITENOISE_AUTOREFRESH = True  #this related to media
+
+ 6.) Create Admin
+
+	     -> migrate
+			-> python manage.py migrate
+	     -> create user
+			-> python manage.py createuser
+			-> fill-up user credentials
+
+ 7.) Initialize git and commit
+
+	     -> git init
+             -> git add .   #(.) for all files
+             -> git commit -am "1st push"   #staging
+
+ 5.) Heroku 
+	-> create heroku account
+	-> download heroku CLI
+	-> heroku login -i  #login heroku
+	-> heroku create <app name>
+	-> git remote -v  #You can use the git remote command to confirm that a remote named heroku has been set for your app:
+	-> heroku git:remote -a <app name>
+	-> git push heroku main
